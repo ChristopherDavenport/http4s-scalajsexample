@@ -1,10 +1,10 @@
-package tutorial.webapp
+package org.http4s.scalajsexample
 
 import scala.scalajs.js.JSApp
 import org.scalajs.dom
 import dom.document
 
-import scala.scalajs.js.annotation.{JSExport, JSExportTopLevel}
+import scala.scalajs.js.annotation.JSExportTopLevel
 
 /**
  * Tuturial WebApp entry point

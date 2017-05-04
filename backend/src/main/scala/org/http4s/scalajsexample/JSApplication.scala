@@ -1,4 +1,4 @@
-package edu.eckerd.formtest
+package org.http4s.scalajsexample
 
 import cats.data._
 import org.http4s._
@@ -19,14 +19,26 @@ object JSApplication {
     List(
       script(src := jsScript),
       script(src := jsDeps),
-      script("tutorial.webapp.TutorialApp().main()")
+      script("org.http4s.scalajsexample.TutorialApp().main()")
+    )
+  }
+
+  val buttonTag: Seq[Modifier] = {
+    import scalatags.Text.all._
+    Seq(
+      button(
+        id := "click-me-button",
+        `type` := "button",
+        onclick := "addClickedMessage()"
+      )
     )
   }
 
   def index(
       headContent: Seq[Modifier],
       bodyContent: Seq[Modifier],
-      scripts: Seq[Modifier]): TypedTag[String] = {
+      scripts: Seq[Modifier],
+      css: Seq[Modifier]): TypedTag[String] = {
     import scalatags.Text.all._
 
     html(
@@ -47,7 +59,12 @@ object JSApplication {
   val service = HttpService {
 
     case req @ GET -> Root =>
-      Ok(index(Seq(), Seq(), jsScripts).render)
+      Ok(index(Seq(), Seq(), jsScripts, Seq()).render)
+        .withContentType(Some(`Content-Type`(`text/html`, Charset.`UTF-8`)))
+        .putHeaders(`Cache-Control`(NonEmptyList.of(`no-cache`())))
+
+    case req @ GET -> Root / "button" =>
+      Ok(index(Seq(), buttonTag, jsScripts, Seq()).render)
         .withContentType(Some(`Content-Type`(`text/html`, Charset.`UTF-8`)))
         .putHeaders(`Cache-Control`(NonEmptyList.of(`no-cache`())))
 

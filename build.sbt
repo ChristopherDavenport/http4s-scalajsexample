@@ -19,6 +19,12 @@ def includeInTrigger(f: java.io.File): Boolean =
 lazy val shared =
   (crossProject.crossType(CrossType.Pure) in file("shared"))
     .settings(commonSettings)
+    .settings(
+      libraryDependencies ++= Seq(
+        "com.lihaoyi" %%% "scalatags"             % "0.6.5",
+        "com.github.japgolly.scalacss" %%% "core" % "0.5.1"
+      )
+    )
 
 lazy val sharedJvm = shared.jvm
 lazy val sharedJs = shared.js
@@ -33,8 +39,7 @@ lazy val backend = (project in file("backend"))
       "org.http4s"     %% "http4s-blaze-server" % Http4sVersion,
       "org.http4s"     %% "http4s-circe"        % Http4sVersion,
       "org.http4s"     %% "http4s-dsl"          % Http4sVersion,
-      "ch.qos.logback" % "logback-classic"      % "1.2.3",
-      "com.lihaoyi"    %% "scalatags"           % "0.6.5"
+      "ch.qos.logback" % "logback-classic"      % "1.2.3"
     ),
     // Allows to read the generated JS on client
     resources in Compile += (fastOptJS in (frontend, Compile)).value.data,
@@ -53,7 +58,7 @@ lazy val backend = (project in file("backend"))
       { t.filter(includeInTrigger) }
     },
     // Support stopping the running server
-    mainClass in reStart := Some("edu.eckerd.formtest.Server")
+    mainClass in reStart := Some("org.http4s.scalajsexample.Server")
   )
   .dependsOn(sharedJvm)
 

@@ -1,4 +1,4 @@
-package tutorial.webapp
+package org.http4s.scalajsexample
 
 import org.scalajs.dom
 import dom.document
