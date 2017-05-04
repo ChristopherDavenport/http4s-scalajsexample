@@ -1,12 +1,8 @@
 package edu.eckerd.formtest
 
 import cats.data._
-import cats.implicits._
-import io.circe._
 import org.http4s._
 import org.http4s.CacheDirective._
-import org.http4s.circe._
-import org.http4s.{Charset, Request, Response, StaticFile}
 import org.http4s.dsl._
 import org.http4s.MediaType._
 import org.http4s.headers._
@@ -27,13 +23,6 @@ object JSApplication {
     )
   }
 
-  def parseJs(jsFiles: List[String]): Seq[Modifier] = {
-    import scalatags.Text.all._
-    jsFiles.map { file =>
-      script(src := file)
-    }
-  }
-
   def index(
       headContent: Seq[Modifier],
       bodyContent: Seq[Modifier],
@@ -52,6 +41,9 @@ object JSApplication {
 
   }
 
+  val supportedStaticExtensions =
+    List(".html", ".js", ".map", ".css", ".png", ".ico")
+
   val service = HttpService {
 
     case req @ GET -> Root =>
@@ -59,7 +51,7 @@ object JSApplication {
         .withContentType(Some(`Content-Type`(`text/html`, Charset.`UTF-8`)))
         .putHeaders(`Cache-Control`(NonEmptyList.of(`no-cache`())))
 
-    case req if req.pathInfo.endsWith(".js") =>
+    case req if supportedStaticExtensions.exists(req.pathInfo.endsWith) =>
       StaticFile
         .fromResource(req.pathInfo, Some(req))
         .map(_.putHeaders())
