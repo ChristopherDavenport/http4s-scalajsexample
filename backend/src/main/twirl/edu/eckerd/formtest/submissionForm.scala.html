@@ -1,0 +1,12 @@
+@(msg: String)
+
+@main("Title") {
+    <form name="input" method="post">
+        <p>@msg: <input type="text" name="@msg"/></p>
+        <p><input type="submit" value="Submit"/></p>
+    </form>
+    <br>
+    <button id="click-me-button" type="button" onclick="addClickedMessage()">
+        Click me!
+    </button>
+}
