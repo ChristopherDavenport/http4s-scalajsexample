@@ -19,7 +19,7 @@ object Server extends StreamApp {
   override def stream(args: List[String]): Stream[Task, Unit] =
     BlazeBuilder
       .bindHttp(port, ip)
-      .mountService(HelloWorld.service)
+      .mountService(JSApplication.service)
       .withServiceExecutor(pool)
       .serve
 }
