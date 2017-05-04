@@ -12,8 +12,8 @@ import scalatags.Text.all.Modifier
 
 object JSApplication {
 
-  val jsScript = "formtest-frontend-fastopt.js"
-  val jsDeps = "formtest-frontend-jsdeps.js"
+  val jsScript = "http4s-scalajsexample-frontend-fastopt.js"
+  val jsDeps = "http4s-scalajsexample-frontend-jsdeps.js"
   val jsScripts: Seq[Modifier] = {
     import scalatags.Text.all._
     List(

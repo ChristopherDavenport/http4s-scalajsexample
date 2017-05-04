@@ -1,5 +1,5 @@
 lazy val commonSettings = {
-  organization := "edu.eckerd"
+  organization := "org.http4s"
   version := "0.0.1-SNAPSHOT"
   scalaVersion := "2.12.2"
 }
@@ -21,8 +21,7 @@ lazy val shared =
     .settings(commonSettings)
     .settings(
       libraryDependencies ++= Seq(
-        "com.lihaoyi" %%% "scalatags"             % "0.6.5",
-        "com.github.japgolly.scalacss" %%% "core" % "0.5.1"
+        "com.lihaoyi" %%% "scalatags" % "0.6.5"
       )
     )
 
@@ -31,7 +30,7 @@ lazy val sharedJs = shared.js
 
 lazy val backend = (project in file("backend"))
   .settings(
-    name := "formtest-backend"
+    name := "http4s-scalajsexample--backend"
   )
   .settings(commonSettings)
   .settings(
@@ -64,7 +63,7 @@ lazy val backend = (project in file("backend"))
 
 lazy val frontend = (project in file("frontend"))
   .settings(
-    name := "formtest-frontend"
+    name := "http4s-scalajsexample-frontend"
   )
   .enablePlugins(ScalaJSPlugin)
   .settings(commonSettings: _*)
