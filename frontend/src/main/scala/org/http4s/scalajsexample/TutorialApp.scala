@@ -12,8 +12,7 @@ import scala.scalajs.js.annotation.JSExportTopLevel
 @JSExportTopLevel("TutorialApp")
 object TutorialApp extends JSApp {
 
-  def main(): Unit =
-    appendPar(document.body, "Hello World")
+  def main(): Unit = ()
 
   def appendPar(targetNode: dom.Node, text: String): Unit = {
     val parNode = document.createElement("p")

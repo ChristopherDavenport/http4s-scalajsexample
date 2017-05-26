@@ -23,18 +23,41 @@ object JSApplication {
     )
   }
 
+  val index: Seq[Modifier] = {
+    import scalatags.Text.all._
+    Seq(
+      h1(
+        style:= "align: center;",
+        "Http4s Scala-js Example App"
+      ),
+      a(href:="/button", h4("Button Example"))
+    )
+  }
+
   val buttonTag: Seq[Modifier] = {
     import scalatags.Text.all._
     Seq(
+      h1("Push The Button"),
+      a(href:="/", h4("Home")),
       button(
         id := "click-me-button",
         `type` := "button",
-        onclick := "addClickedMessage()"
+        onclick := "addClickedMessage()",
+        style := "background-color: #4CAF50; /* Green */ " +
+          "border: none; " +
+          "border-radius: 12px; " +
+          "color: white; " +
+          "padding: 15px 32px; " +
+          "text-align: center; " +
+          "text-decoration: none; " +
+          "display: inline-block; " +
+          "font-size: 16px;",
+        "Click Me"
       )
     )
   }
 
-  def index(
+  def template(
       headContent: Seq[Modifier],
       bodyContent: Seq[Modifier],
       scripts: Seq[Modifier],
@@ -59,12 +82,12 @@ object JSApplication {
   val service = HttpService {
 
     case req @ GET -> Root =>
-      Ok(index(Seq(), Seq(), jsScripts, Seq()).render)
+      Ok(template(Seq(), index, jsScripts, Seq()).render)
         .withContentType(Some(`Content-Type`(`text/html`, Charset.`UTF-8`)))
         .putHeaders(`Cache-Control`(NonEmptyList.of(`no-cache`())))
 
     case req @ GET -> Root / "button" =>
-      Ok(index(Seq(), buttonTag, jsScripts, Seq()).render)
+      Ok(template(Seq(), buttonTag, jsScripts, Seq()).render)
         .withContentType(Some(`Content-Type`(`text/html`, Charset.`UTF-8`)))
         .putHeaders(`Cache-Control`(NonEmptyList.of(`no-cache`())))
 
