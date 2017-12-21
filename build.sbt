@@ -1,12 +1,12 @@
 lazy val commonSettings = {
   organization := "org.http4s"
   version := "0.0.1-SNAPSHOT"
-  scalaVersion := "2.12.2"
+  scalaVersion := "2.12.4"
 }
 
 val Http4sVersion = "0.18.0-M6"
-val utestV = "0.4.5"
-val scalaJsDomV = "0.9.1"
+val utestV = "0.6.2"
+val scalaJsDomV = "0.9.4"
 
 // This function allows triggered compilation to run only when scala files changes
 // It lets change static files freely
@@ -52,10 +52,6 @@ lazy val backend = (project in file("backend"))
     reStart := (reStart dependsOn (fastOptJS in (frontend, Compile))).evaluated,
     // This settings makes reStart to rebuild if a scala.js file changes on the client
     watchSources ++= (watchSources in frontend).value,
-    // On recompilation only consider changes to .scala and .js files
-    watchSources ~= { t: Seq[java.io.File] =>
-      { t.filter(includeInTrigger) }
-    },
     // Support stopping the running server
     mainClass in reStart := Some("org.http4s.scalajsexample.Server")
   )
@@ -69,9 +65,10 @@ lazy val frontend = (project in file("frontend"))
   .settings(commonSettings: _*)
   .settings(
     // Requires the DOM
-    jsDependencies += RuntimeDOM,
+//    jsEnv := org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv() ,
     // Build a js dependencies file
     skip in packageJSDependencies := false,
+
     // Put the jsdeps file on a place reachable for the server
     crossTarget in (Compile, packageJSDependencies) := (resourceManaged in Compile).value,
     testFrameworks += new TestFramework("utest.runner.Framework"),

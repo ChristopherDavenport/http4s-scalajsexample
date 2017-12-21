@@ -1,6 +1,6 @@
 package org.http4s.scalajsexample
 
-import scala.scalajs.js.JSApp
+//import scala.scalajs.js.JSApp
 import org.scalajs.dom
 import dom.document
 
@@ -10,7 +10,7 @@ import scala.scalajs.js.annotation.JSExportTopLevel
  * Tuturial WebApp entry point
  */
 @JSExportTopLevel("TutorialApp")
-object TutorialApp extends JSApp {
+object TutorialApp {
 
   def main(): Unit = ()
 
@@ -19,6 +19,7 @@ object TutorialApp extends JSApp {
     val textNode = document.createTextNode(text)
     parNode.appendChild(textNode)
     targetNode.appendChild(parNode)
+    ()
   }
 
   @JSExportTopLevel("addClickedMessage")
