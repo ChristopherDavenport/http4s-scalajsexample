@@ -63,12 +63,13 @@ object JSApplication {
       headContent: Seq[Modifier],
       bodyContent: Seq[Modifier],
       scripts: Seq[Modifier],
-      css: Seq[Modifier]): TypedTag[String] = {
+      cssComps: Seq[Modifier]): TypedTag[String] = {
     import scalatags.Text.all._
 
     html(
       head(
-        headContent
+        headContent,
+        cssComps
       ),
       body(
         bodyContent,
@@ -82,28 +83,30 @@ object JSApplication {
     List(".html", ".js", ".map", ".css", ".png", ".ico")
 
   def service[F[_]](implicit F: Effect[F]) = {
-    def getResource[F[_]](pathInfo: String)(implicit F: Effect[F]) = F.delay(getClass.getResource(pathInfo))
+    def getResource(pathInfo: String) = F.delay(getClass.getResource(pathInfo))
 
     object dsl extends Http4sDsl[F]
     import dsl._
 
     HttpService[F] {
 
-      case req@GET -> Root =>
+      case GET -> Root =>
         Ok(template(Seq(), index, jsScripts, Seq()).render)
-          .withContentType(`Content-Type`(`text/html`, Charset.`UTF-8`))
-          .putHeaders(`Cache-Control`(NonEmptyList.of(`no-cache`())))
+          .map(
+            _.withContentType(`Content-Type`(`text/html`, Charset.`UTF-8`))
+              .putHeaders(`Cache-Control`(NonEmptyList.of(`no-cache`())))
+          )
 
-      case req@GET -> Root / "button" =>
+      case GET -> Root / "button" =>
         Ok(template(Seq(), buttonTag, jsScripts, Seq()).render)
-          .withContentType(`Content-Type`(`text/html`, Charset.`UTF-8`))
-          .putHeaders(`Cache-Control`(NonEmptyList.of(`no-cache`())))
+          .map(
+            _.withContentType(`Content-Type`(`text/html`, Charset.`UTF-8`))
+              .putHeaders(`Cache-Control`(NonEmptyList.of(`no-cache`())))
+          )
 
       case req if supportedStaticExtensions.exists(req.pathInfo.endsWith) =>
         StaticFile.fromResource[F](req.pathInfo, req.some)
-          .orElse(
-            OptionT.liftF(getResource[F](req.pathInfo)).flatMap(StaticFile.fromURL[F](_, req.some))
-          )
+          .orElse(OptionT.liftF(getResource(req.pathInfo)).flatMap(StaticFile.fromURL[F](_, req.some)))
           .map(_.putHeaders(`Cache-Control`(NonEmptyList.of(`no-cache`()))))
           .fold(NotFound())(_.pure[F])
           .flatten
