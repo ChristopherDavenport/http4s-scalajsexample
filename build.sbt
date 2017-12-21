@@ -66,8 +66,9 @@ lazy val frontend = (project in file("frontend"))
   .settings(
     // Build a js dependencies file
     skip in packageJSDependencies := false,
+    jsEnv := new org.scalajs.jsenv.nodejs.NodeJSEnv(),
 
-    // Put the jsdeps file on a place reachable for the server
+      // Put the jsdeps file on a place reachable for the server
     crossTarget in (Compile, packageJSDependencies) := (resourceManaged in Compile).value,
     testFrameworks += new TestFramework("utest.runner.Framework"),
     libraryDependencies ++= Seq(
