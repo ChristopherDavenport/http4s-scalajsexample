@@ -4,7 +4,7 @@ lazy val commonSettings = {
   scalaVersion := "2.12.2"
 }
 
-val Http4sVersion = "0.17.0-M2"
+val Http4sVersion = "0.18.0-M6"
 val utestV = "0.4.5"
 val scalaJsDomV = "0.9.1"
 

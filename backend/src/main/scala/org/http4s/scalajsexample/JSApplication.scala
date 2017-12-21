@@ -1,12 +1,14 @@
 package org.http4s.scalajsexample
 
+import cats.implicits._
 import cats.data._
+import cats.effect.Effect
 import org.http4s._
 import org.http4s.CacheDirective._
-import org.http4s.dsl._
 import org.http4s.MediaType._
+import org.http4s.dsl.Http4sDsl
 import org.http4s.headers._
-import fs2._
+
 import scalatags.Text.TypedTag
 import scalatags.Text.all.Modifier
 
@@ -79,28 +81,34 @@ object JSApplication {
   val supportedStaticExtensions =
     List(".html", ".js", ".map", ".css", ".png", ".ico")
 
-  val service = HttpService {
+  def service[F[_]](implicit F: Effect[F]) = {
+    def getResource[F[_]](pathInfo: String)(implicit F: Effect[F]) = F.delay(getClass.getResource(pathInfo))
 
-    case req @ GET -> Root =>
-      Ok(template(Seq(), index, jsScripts, Seq()).render)
-        .withContentType(Some(`Content-Type`(`text/html`, Charset.`UTF-8`)))
-        .putHeaders(`Cache-Control`(NonEmptyList.of(`no-cache`())))
+    object dsl extends Http4sDsl[F]
+    import dsl._
 
-    case req @ GET -> Root / "button" =>
-      Ok(template(Seq(), buttonTag, jsScripts, Seq()).render)
-        .withContentType(Some(`Content-Type`(`text/html`, Charset.`UTF-8`)))
-        .putHeaders(`Cache-Control`(NonEmptyList.of(`no-cache`())))
+    HttpService[F] {
 
-    case req if supportedStaticExtensions.exists(req.pathInfo.endsWith) =>
-      StaticFile
-        .fromResource(req.pathInfo, Some(req))
-        .map(_.putHeaders())
-        .orElse(Option(getClass.getResource(req.pathInfo)).flatMap(
-          StaticFile.fromURL(_, Some(req))))
-        .map(_.putHeaders(`Cache-Control`(NonEmptyList.of(`no-cache`()))))
-        .map(Task.now)
-        .getOrElse(NotFound())
+      case req@GET -> Root =>
+        Ok(template(Seq(), index, jsScripts, Seq()).render)
+          .withContentType(`Content-Type`(`text/html`, Charset.`UTF-8`))
+          .putHeaders(`Cache-Control`(NonEmptyList.of(`no-cache`())))
 
+      case req@GET -> Root / "button" =>
+        Ok(template(Seq(), buttonTag, jsScripts, Seq()).render)
+          .withContentType(`Content-Type`(`text/html`, Charset.`UTF-8`))
+          .putHeaders(`Cache-Control`(NonEmptyList.of(`no-cache`())))
+
+      case req if supportedStaticExtensions.exists(req.pathInfo.endsWith) =>
+        StaticFile.fromResource[F](req.pathInfo, req.some)
+          .orElse(
+            OptionT.liftF(getResource[F](req.pathInfo)).flatMap(StaticFile.fromURL[F](_, req.some))
+          )
+          .map(_.putHeaders(`Cache-Control`(NonEmptyList.of(`no-cache`()))))
+          .fold(NotFound())(_.pure[F])
+          .flatten
+
+    }
   }
 
 }
