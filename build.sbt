@@ -7,6 +7,9 @@ lazy val commonSettings = {
 val Http4sVersion = "0.18.0-M6"
 val utestV = "0.6.2"
 val scalaJsDomV = "0.9.4"
+val scalaTagsV = "0.6.7"
+val circeV = "0.9.0-M2"
+val catsEffectV = "0.5"
 
 // This function allows triggered compilation to run only when scala files changes
 // It lets change static files freely
@@ -21,7 +24,11 @@ lazy val shared =
     .settings(commonSettings)
     .settings(
       libraryDependencies ++= Seq(
-        "com.lihaoyi" %%% "scalatags" % "0.6.7"
+        "com.lihaoyi" %%% "scalatags" % scalaTagsV,
+        "io.circe" %%% "circe-core" % circeV,
+        "io.circe" %%% "circe-generic" % circeV,
+        "io.circe" %%% "circe-parser" % circeV
+//        "org.typelevel" %% "cats-effect" % catsEffectV
       )
     )
 
