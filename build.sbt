@@ -21,7 +21,7 @@ lazy val shared =
     .settings(commonSettings)
     .settings(
       libraryDependencies ++= Seq(
-        "com.lihaoyi" %%% "scalatags" % "0.6.5"
+        "com.lihaoyi" %%% "scalatags" % "0.6.7"
       )
     )
 
@@ -64,8 +64,6 @@ lazy val frontend = (project in file("frontend"))
   .enablePlugins(ScalaJSPlugin)
   .settings(commonSettings: _*)
   .settings(
-    // Requires the DOM
-//    jsEnv := org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv() ,
     // Build a js dependencies file
     skip in packageJSDependencies := false,
 
