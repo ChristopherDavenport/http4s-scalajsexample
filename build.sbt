@@ -4,12 +4,12 @@ lazy val commonSettings = {
   scalaVersion := "2.12.4"
 }
 
-val Http4sVersion = "0.18.0-M6"
+val Http4sVersion = "0.18.0-M7"
 val utestV = "0.6.2"
 val scalaJsDomV = "0.9.4"
 val scalaTagsV = "0.6.7"
-val circeV = "0.9.0-M2"
-val catsEffectV = "0.5"
+val circeV = "0.9.0-M3"
+val catsEffectV = "0.6"
 
 // This function allows triggered compilation to run only when scala files changes
 // It lets change static files freely
