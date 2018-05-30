@@ -88,10 +88,14 @@ object JSApplication {
   val canvasTag: Seq[Modifier] = {
     import scalatags.Text.all._
     Seq(
-      h1("Pretty Canvas")
-      a(href:="/", h4("Home"))
+      h1("Pretty Canvas"),
+      a(href:="/", h4("Home")),
+      canvas(
+        height := 600,
+        width := 800
+      ),
       button(
-        id := "canvas-button"
+        id := "canvas-button",
         `type` := "button",
         onclick := "", // TODO
         style := "background-color: #4CAF50; /* Green */ " +
@@ -164,11 +168,11 @@ object JSApplication {
         Ok(MyData(name).asJson)
 
       case GET -> Root / "canvas" => 
-        Ok(Ok(template(Seq(), ajaxTag, jsScripts, Seq()).render)
+        Ok(template(Seq(), canvasTag, jsScripts, Seq()).render)
           .map(
             _.withContentType(`Content-Type`(`text/html`, Charset.`UTF-8`))
               .putHeaders(`Cache-Control`(NonEmptyList.of(`no-cache`())))
-          ))
+          )
 
       case req if supportedStaticExtensions.exists(req.pathInfo.endsWith) =>
         StaticFile.fromResource[F](req.pathInfo, req.some)
