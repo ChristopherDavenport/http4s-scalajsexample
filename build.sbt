@@ -1,15 +1,17 @@
+import sbtcrossproject.{crossProject, CrossType}
+
 lazy val commonSettings = {
   organization := "org.http4s"
   version := "0.0.1-SNAPSHOT"
-  scalaVersion := "2.12.4"
+  scalaVersion := "2.12.6"
 }
 
-val Http4sVersion = "0.18.2"
+val Http4sVersion = "0.18.12"
 val utestV = "0.6.2"
-val scalaJsDomV = "0.9.4"
+val scalaJsDomV = "0.9.6"
 val scalaTagsV = "0.6.7"
-val circeV = "0.9.1"
-val catsEffectV = "0.10"
+val circeV = "0.9.3"
+val catsEffectV = "0.10.1"
 
 // This function allows triggered compilation to run only when scala files changes
 // It lets change static files freely
@@ -20,7 +22,7 @@ def includeInTrigger(f: java.io.File): Boolean =
   }
 
 lazy val shared =
-  (crossProject.crossType(CrossType.Pure) in file("shared"))
+  (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file("shared"))
     .settings(commonSettings)
     .settings(
       libraryDependencies ++= Seq(
