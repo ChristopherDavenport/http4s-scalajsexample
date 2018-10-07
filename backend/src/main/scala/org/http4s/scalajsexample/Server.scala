@@ -1,21 +1,25 @@
 package org.http4s.scalajsexample
 
 import scala.util.Properties.envOrNone
+import cats.implicits._
 import cats.effect._
 import fs2._
 import org.http4s.server.blaze.BlazeBuilder
-import scala.concurrent.ExecutionContext.Implicits.global
 
-object Server extends StreamApp[IO] {
+object Server extends IOApp {
 
   val ip: String = "0.0.0.0"
 
-  override def stream(args: List[String], requestShutdown: IO[Unit]): Stream[IO, StreamApp.ExitCode] =
+  override def run(args: List[String]): IO[ExitCode] =
+    stream[IO](args).compile.drain.as(ExitCode.Success)
+
+  def stream[F[_]: ConcurrentEffect: Timer: ContextShift](args: List[String]): Stream[F, ExitCode] =
     for {
-      port <- Stream.eval(IO(envOrNone("HTTP_PORT").map(_.toInt).getOrElse(8080)))
-      exitCode <- BlazeBuilder[IO]
+      _ <- Stream(args) // discard unused args
+      port <- Stream.eval(ConcurrentEffect[F].delay(envOrNone("HTTP_PORT").map(_.toInt).getOrElse(8080)))
+      exitCode <- BlazeBuilder[F]
         .bindHttp(port, ip)
-        .mountService(JSApplication.service)
+        .mountService(JSApplication.service, "/")
         .serve
     } yield exitCode
 

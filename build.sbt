@@ -3,15 +3,15 @@ import sbtcrossproject.{crossProject, CrossType}
 lazy val commonSettings = {
   organization := "org.http4s"
   version := "0.0.1-SNAPSHOT"
-  scalaVersion := "2.12.6"
+  scalaVersion := "2.12.7"
 }
 
-val Http4sVersion = "0.18.12"
-val utestV = "0.6.2"
+val Http4sVersion = "0.19.0"
+val utestV = "0.6.5"
 val scalaJsDomV = "0.9.6"
 val scalaTagsV = "0.6.7"
-val circeV = "0.9.3"
-val catsEffectV = "0.10.1"
+val circeV = "0.10.0"
+val catsEffectV = "1.0.0"
 
 // This function allows triggered compilation to run only when scala files changes
 // It lets change static files freely
