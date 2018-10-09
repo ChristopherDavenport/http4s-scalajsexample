@@ -147,7 +147,7 @@ object JSApplication {
           .fold(NotFound())(_.pure[F])
           .flatten
 
-    }
+    }.orNotFound
   }
 
 }
