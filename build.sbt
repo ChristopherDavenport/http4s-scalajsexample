@@ -4,6 +4,7 @@ lazy val commonSettings = {
   organization := "org.http4s"
   version := "0.0.1-SNAPSHOT"
   scalaVersion := "2.12.7"
+  crossScalaVersions := Seq(scalaVersion.value, "2.11.12")
 }
 
 val Http4sVersion = "0.19.0"
