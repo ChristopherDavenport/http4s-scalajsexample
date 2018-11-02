@@ -7,11 +7,11 @@ lazy val commonSettings = {
   crossScalaVersions := Seq(scalaVersion.value, "2.11.12")
 }
 
-val Http4sVersion = "0.19.0"
+val Http4sVersion = "0.20.0-M1"
 val utestV = "0.6.5"
 val scalaJsDomV = "0.9.6"
 val scalaTagsV = "0.6.7"
-val circeV = "0.10.0"
+val circeV = "0.10.1"
 val catsEffectV = "1.0.0"
 
 // This function allows triggered compilation to run only when scala files changes
