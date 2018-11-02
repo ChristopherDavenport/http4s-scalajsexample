@@ -2,14 +2,15 @@ package org.http4s.scalajsexample
 
 import cats.implicits._
 import cats.data._
-import cats.effect.Effect
+import cats.effect._
+import io.circe.syntax._
 import org.http4s._
 import org.http4s.CacheDirective._
-import org.http4s.MediaType._
+import org.http4s.MediaType
 import org.http4s.dsl.Http4sDsl
 import org.http4s.headers._
 import org.http4s.circe._
-import io.circe.syntax._
+import scala.concurrent.ExecutionContext.global
 import scalatags.Text.TypedTag
 import scalatags.Text.all.Modifier
 
@@ -21,8 +22,7 @@ object JSApplication {
     import scalatags.Text.all._
     List(
       script(src := jsScript),
-      script(src := jsDeps),
-      script("org.http4s.scalajsexample.TutorialApp().main()")
+      script(src := jsDeps)
     )
   }
 
@@ -94,7 +94,8 @@ object JSApplication {
     html(
       head(
         headContent,
-        cssComps
+        cssComps,
+        link(rel:="shortcut icon", media:="image/png", href:="/assets/images/favicon.png")
       ),
       body(
         bodyContent,
@@ -107,32 +108,32 @@ object JSApplication {
   val supportedStaticExtensions =
     List(".html", ".js", ".map", ".css", ".png", ".ico")
 
-  def service[F[_]](implicit F: Effect[F]) = {
+  def service[F[_]](implicit F: Effect[F], cs: ContextShift[F]) = {
     def getResource(pathInfo: String) = F.delay(getClass.getResource(pathInfo))
 
     object dsl extends Http4sDsl[F]
     import dsl._
 
-    HttpService[F] {
+    HttpRoutes.of[F] {
 
       case GET -> Root =>
         Ok(template(Seq(), index, jsScripts, Seq()).render)
           .map(
-            _.withContentType(`Content-Type`(`text/html`, Charset.`UTF-8`))
+            _.withContentType(`Content-Type`(MediaType.text.html, Charset.`UTF-8`))
               .putHeaders(`Cache-Control`(NonEmptyList.of(`no-cache`())))
           )
 
       case GET -> Root / "button" =>
         Ok(template(Seq(), buttonTag, jsScripts, Seq()).render)
           .map(
-            _.withContentType(`Content-Type`(`text/html`, Charset.`UTF-8`))
+            _.withContentType(`Content-Type`(MediaType.text.html, Charset.`UTF-8`))
               .putHeaders(`Cache-Control`(NonEmptyList.of(`no-cache`())))
           )
 
       case GET -> Root / "ajax" =>
         Ok(template(Seq(), ajaxTag, jsScripts, Seq()).render)
           .map(
-            _.withContentType(`Content-Type`(`text/html`, Charset.`UTF-8`))
+            _.withContentType(`Content-Type`(MediaType.text.html, Charset.`UTF-8`))
               .putHeaders(`Cache-Control`(NonEmptyList.of(`no-cache`())))
           )
 
@@ -140,13 +141,13 @@ object JSApplication {
         Ok(MyData(name).asJson)
 
       case req if supportedStaticExtensions.exists(req.pathInfo.endsWith) =>
-        StaticFile.fromResource[F](req.pathInfo, req.some)
-          .orElse(OptionT.liftF(getResource(req.pathInfo)).flatMap(StaticFile.fromURL[F](_, req.some)))
+        StaticFile.fromResource[F](req.pathInfo, global, req.some)
+          .orElse(OptionT.liftF(getResource(req.pathInfo)).flatMap(StaticFile.fromURL[F](_, global, req.some)))
           .map(_.putHeaders(`Cache-Control`(NonEmptyList.of(`no-cache`()))))
           .fold(NotFound())(_.pure[F])
           .flatten
 
-    }
+    }.orNotFound
   }
 
 }

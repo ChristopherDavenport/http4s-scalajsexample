@@ -1,22 +1,25 @@
 package org.http4s.scalajsexample
 
 import scala.util.Properties.envOrNone
+import cats.implicits._
 import cats.effect._
-import fs2._
-import org.http4s.server.blaze.BlazeBuilder
-import scala.concurrent.ExecutionContext.Implicits.global
+import org.http4s.server.blaze.BlazeServerBuilder
 
-object Server extends StreamApp[IO] {
+object Server extends IOApp {
 
   val ip: String = "0.0.0.0"
 
-  override def stream(args: List[String], requestShutdown: IO[Unit]): Stream[IO, StreamApp.ExitCode] =
+  override def run(args: List[String]): IO[ExitCode] =
     for {
-      port <- Stream.eval(IO(envOrNone("HTTP_PORT").map(_.toInt).getOrElse(8080)))
-      exitCode <- BlazeBuilder[IO]
-        .bindHttp(port, ip)
-        .mountService(JSApplication.service)
+      _ <- IO(args) // discard unused args
+      port <- IO(envOrNone("HTTP_PORT").map(_.toInt).getOrElse(8080))
+      exitCode <- BlazeServerBuilder[IO]
+        .bindHttp(port, "localhost")
+        .withHttpApp(JSApplication.service)
         .serve
+        .compile
+        .drain
+        .as(ExitCode.Success)
     } yield exitCode
 
 }
