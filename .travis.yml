@@ -1,10 +1,10 @@
 language: scala
 scala:
-  - 2.12.4
+  - 2.12.8
   - 2.11.12
 sudo: false
 jdk:
-  - oraclejdk8
+  - openjdk8
 script:
   - sbt ++$TRAVIS_SCALA_VERSION backend/test frontend/test
   # Tricks to avoid unnecessary cache updates, from
