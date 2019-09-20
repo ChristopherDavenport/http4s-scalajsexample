@@ -7,7 +7,7 @@ lazy val commonSettings = {
   crossScalaVersions := Seq(scalaVersion.value, "2.11.12")
 }
 
-val Http4sVersion = "0.20.0-M1"
+val Http4sVersion = "0.20.11"
 val utestV = "0.6.7"
 val scalaJsDomV = "0.9.7"
 val scalaTagsV = "0.6.8"
