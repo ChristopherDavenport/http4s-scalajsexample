@@ -11,7 +11,7 @@ val Http4sVersion = "0.20.0-M1"
 val utestV = "0.6.7"
 val scalaJsDomV = "0.9.7"
 val scalaTagsV = "0.6.8"
-val circeV = "0.11.1"
+val circeV = "0.11.2"
 val catsEffectV = "1.0.0"
 
 // This function allows triggered compilation to run only when scala files changes
