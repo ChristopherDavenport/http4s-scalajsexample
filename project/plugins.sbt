@@ -9,6 +9,6 @@ addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "0.6.1")
 addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.9.0")
 
 // Best Practices for Production Code
-addSbtPlugin("io.github.davidgregory084" % "sbt-tpolecat" % "0.1.8")
+addSbtPlugin("io.github.davidgregory084" % "sbt-tpolecat" % "0.1.9")
 
 addSbtPlugin("org.lyranthe.sbt" % "partial-unification" % "1.1.2")
