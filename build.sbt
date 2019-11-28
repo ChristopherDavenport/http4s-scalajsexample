@@ -1,17 +1,16 @@
-import sbtcrossproject.{crossProject, CrossType}
+import sbtcrossproject.CrossPlugin.autoImport.{CrossType, crossProject}
 
 lazy val commonSettings = {
   organization := "org.http4s"
   version := "0.0.1-SNAPSHOT"
-  scalaVersion := "2.12.7"
-  crossScalaVersions := Seq(scalaVersion.value, "2.11.12")
+  scalaVersion := "2.12.10"
 }
 
-val Http4sVersion = "0.20.0-M1"
-val utestV = "0.6.7"
+val Http4sVersion = "0.20.14"
+val utestV = "0.7.1"
 val scalaJsDomV = "0.9.7"
-val scalaTagsV = "0.6.8"
-val circeV = "0.11.2"
+val scalaTagsV = "0.7.0"
+val circeV = "0.12.3"
 val catsEffectV = "1.0.0"
 
 // This function allows triggered compilation to run only when scala files changes
