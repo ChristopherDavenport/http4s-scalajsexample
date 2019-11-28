@@ -1,6 +1,7 @@
 package org.http4s.scalajsexample
 
 import cats.implicits._
+import org.http4s.implicits._
 import cats.data._
 import cats.effect._
 import io.circe.syntax._
@@ -30,11 +31,11 @@ object JSApplication {
     import scalatags.Text.all._
     Seq(
       h1(
-        style:= "align: center;",
+        style := "align: center;",
         "Http4s Scala-js Example App"
       ),
-      a(href:="/button", h4("Button Example")),
-      a(href:="/ajax", h4("Ajax Example"))
+      a(href := "/button", h4("Button Example")),
+      a(href := "/ajax", h4("Ajax Example"))
     )
   }
 
@@ -42,7 +43,7 @@ object JSApplication {
     import scalatags.Text.all._
     Seq(
       h1("Push The Button"),
-      a(href:="/", h4("Home")),
+      a(href := "/", h4("Home")),
       button(
         id := "click-me-button",
         `type` := "button",
@@ -95,7 +96,7 @@ object JSApplication {
       head(
         headContent,
         cssComps,
-        link(rel:="shortcut icon", media:="image/png", href:="/assets/images/favicon.png")
+        link(rel := "shortcut icon", media := "image/png", href := "/assets/images/favicon.png")
       ),
       body(
         bodyContent,
