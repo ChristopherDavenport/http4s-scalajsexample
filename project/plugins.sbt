@@ -2,8 +2,8 @@
 addSbtPlugin("io.spray" % "sbt-revolver" % "0.9.1")
 
 // Allows Scala.js Compilation
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.31")
-addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "1.0.0")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.33")
+addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "0.6.1")
 
 // Extract metadata from sbt and make it available to the code
 addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.9.0")
