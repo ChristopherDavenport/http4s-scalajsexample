@@ -30,8 +30,8 @@ lazy val shared =
         "com.lihaoyi" %%% "scalatags" % scalaTagsV,
         "io.circe" %%% "circe-core" % circeV,
         "io.circe" %%% "circe-generic" % circeV,
-        "io.circe" %%% "circe-parser" % circeV
-//        "org.typelevel" %% "cats-effect" % catsEffectV
+        "io.circe" %%% "circe-parser" % circeV,
+        "org.typelevel" %%% "cats-effect" % catsEffectV
       )
     )
 
@@ -40,7 +40,7 @@ lazy val sharedJs = shared.js
 
 lazy val backend = (project in file("backend"))
   .settings(
-    name := "http4s-scalajsexample--backend"
+    name := "http4s-scalajsexample-backend"
   )
   .settings(commonSettings)
   .settings(
@@ -74,6 +74,7 @@ lazy val frontend = (project in file("frontend"))
   .enablePlugins(ScalaJSPlugin)
   .settings(commonSettings: _*)
   .settings(
+    scalaJSUseMainModuleInitializer := true,
     // Build a js dependencies file
     skip in packageJSDependencies := false,
     jsEnv := new org.scalajs.jsenv.nodejs.NodeJSEnv(),

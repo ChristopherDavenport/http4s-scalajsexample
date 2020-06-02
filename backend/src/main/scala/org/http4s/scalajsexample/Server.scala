@@ -11,7 +11,6 @@ object Server extends IOApp {
 
   override def run(args: List[String]): IO[ExitCode] =
     for {
-      _ <- IO(args) // discard unused args
       port <- IO(envOrNone("HTTP_PORT").map(_.toInt).getOrElse(8080))
       exitCode <- BlazeServerBuilder[IO]
         .bindHttp(port, "localhost")
